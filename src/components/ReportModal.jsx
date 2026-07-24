@@ -1,9 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function ReportModal({ open, onClose, onSave }) {
+export default function ReportModal({
+  open,
+  onClose,
+  onSave,
+  editingReport,
+}) {
   const [date, setDate] = useState("");
   const [content, setContent] = useState("");
   const [note, setNote] = useState("");
+
+  useEffect(() => {
+    if (editingReport) {
+      setDate(editingReport.date);
+      setContent(editingReport.content);
+      setNote(editingReport.note || "");
+    } else {
+      setDate("");
+      setContent("");
+      setNote("");
+    }
+  }, [editingReport, open]);
 
   if (!open) return null;
 
@@ -14,15 +31,11 @@ export default function ReportModal({ open, onClose, onSave }) {
     }
 
     onSave({
-      id: Date.now(),
+      id: editingReport?.id || Date.now(),
       date,
       content,
       note,
     });
-
-    setDate("");
-    setContent("");
-    setNote("");
 
     onClose();
   }
@@ -30,36 +43,52 @@ export default function ReportModal({ open, onClose, onSave }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 
-      <div className="bg-white rounded-2xl shadow-xl w-[650px] p-8">
+      <div className="bg-white rounded-2xl shadow-xl w-[700px] p-8">
 
         <h2 className="text-2xl font-bold mb-6">
-          新增工作報表
+          {editingReport ? "編輯工作報表" : "新增工作報表"}
         </h2>
 
         <div className="space-y-5">
 
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full border rounded-lg p-3"
-          />
+          <div>
+            <label className="block mb-2 font-medium">
+              日期
+            </label>
 
-          <textarea
-            rows={5}
-            placeholder="工作內容"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full border rounded-lg p-3"
-          />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full border rounded-lg p-3"
+            />
+          </div>
 
-          <textarea
-            rows={3}
-            placeholder="備註"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            className="w-full border rounded-lg p-3"
-          />
+          <div>
+            <label className="block mb-2 font-medium">
+              工作內容
+            </label>
+
+            <textarea
+              rows={6}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="w-full border rounded-lg p-3"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 font-medium">
+              備註
+            </label>
+
+            <textarea
+              rows={3}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className="w-full border rounded-lg p-3"
+            />
+          </div>
 
         </div>
 

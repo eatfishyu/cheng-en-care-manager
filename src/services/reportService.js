@@ -2,7 +2,6 @@ const STORAGE_KEY = "reportData";
 
 function loadData() {
   const data = localStorage.getItem(STORAGE_KEY);
-
   return data ? JSON.parse(data) : {};
 }
 
@@ -13,7 +12,9 @@ function saveData(data) {
 export function getReports(caseId) {
   const data = loadData();
 
-  return data[caseId] || [];
+  return (data[caseId] || []).sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
 }
 
 export function addReport(caseId, report) {
@@ -23,7 +24,27 @@ export function addReport(caseId, report) {
     data[caseId] = [];
   }
 
-  data[caseId].push(report);
+  data[caseId].push({
+    ...report,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  });
+
+  saveData(data);
+}
+
+export function updateReport(caseId, report) {
+  const data = loadData();
+
+  data[caseId] = (data[caseId] || []).map((item) =>
+    item.id === report.id
+      ? {
+          ...report,
+          createdAt: item.createdAt,
+          updatedAt: Date.now(),
+        }
+      : item
+  );
 
   saveData(data);
 }
