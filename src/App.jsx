@@ -1,36 +1,28 @@
-import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import CaseDetail from "./pages/CaseDetail";
+import Layout from "./components/Layout";
 
-function App() {
+import Home from "./pages/Home";
+import Cases from "./pages/Cases";
+import Report from "./pages/Report";
+import PhoneCall from "./pages/PhoneCall";
+import HomeVisit from "./pages/HomeVisit";
+import Archive from "./pages/Archive";
+import Settings from "./pages/Settings";
+
+export default function App() {
   return (
-    <div className="container">
-      <h1>🏠 承恩居督管理系統</h1>
-
-      <div className="card">
-        <h2>📋 今月工作報表</h2>
-        <p>0 / 43</p>
-      </div>
-
-      <div className="card">
-        <h2>📞 今月電訪</h2>
-        <p>0 / 43</p>
-      </div>
-
-      <div className="card">
-        <h2>🏠 今月家訪</h2>
-        <p>0 / 14</p>
-      </div>
-
-      <div className="card">
-        <h2>📂 今月歸檔</h2>
-        <p>0 / 0</p>
-      </div>
-
-      <div className="card">
-        <h2>🔍 搜尋個案</h2>
-        <input type="text" placeholder="輸入個案姓名..." />
-      </div>
-    </div>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/cases" element={<Cases />} />
+        <Route path="/case/:id" element={<CaseDetail />} />
+        <Route path="/report" element={<Report />} />
+        <Route path="/phone" element={<PhoneCall />} />
+        <Route path="/visit" element={<HomeVisit />} />
+        <Route path="/archive" element={<Archive />} />
+        <Route path="/settings" element={<Settings />} />
+      </Route>
+    </Routes>
   );
 }
-
-export default App;
